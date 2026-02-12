@@ -10,45 +10,61 @@ from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
 
 from src.prompt import SYSTEM_PROMPT
-from src.tools import check_igot_account_status, verify_certificate_eligibility, create_igot_ticket
+from src.tools import (
+    check_igot_account_status,
+    verify_certificate_eligibility,
+    create_igot_ticket,
+)
 
-# Load environment variables from root .env (fallback to src/.env if needed)
+# Load env
 load_dotenv()
 if not os.getenv("GROQ_API_KEY"):
     load_dotenv("src/.env")
 
-# 1. Define the State
+# ---- State ----
 class State(TypedDict):
     messages: Annotated[list, add_messages]
 
-# 2. Initialize tools and LLM
-tools = [check_igot_account_status, verify_certificate_eligibility, create_igot_ticket]
+# ---- Tools ----
+tools = [
+    check_igot_account_status,
+    verify_certificate_eligibility,
+    create_igot_ticket,
+]
+
 tool_node = ToolNode(tools)
 
-llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
+# ---- LLM ----
+llm = ChatGroq(
+    model="llama-3.1-8b-instant",
+    temperature=0,
+)
+
 llm_with_tools = llm.bind_tools(tools)
 
-# 3. Define the Nodes
-def assistant(state: State):
+# ---- Agent Node ----
+def agent(state: State):
     messages = [SystemMessage(content=SYSTEM_PROMPT)] + state["messages"]
     response = llm_with_tools.invoke(messages)
     return {"messages": [response]}
 
-def should_continue(state: State):
-    last_message = state["messages"][-1]
-    if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+# ---- Routing Logic ----
+def route(state: State):
+    last_msg = state["messages"][-1]
+    if getattr(last_msg, "tool_calls", None):
         return "tools"
     return END
 
-# 4. Build the Graph
+# ---- Graph ----
 builder = StateGraph(State)
-builder.add_node("agent", assistant)
+
+builder.add_node("agent", agent)
 builder.add_node("tools", tool_node)
 
 builder.set_entry_point("agent")
-builder.add_conditional_edges("agent", should_continue)
+builder.add_conditional_edges("agent", route)
 builder.add_edge("tools", "agent")
 
-# 5. Compile with Persistence
+# ---- Compile ----
 memory = MemorySaver()
 app = builder.compile(checkpointer=memory)
