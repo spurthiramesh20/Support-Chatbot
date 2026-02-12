@@ -3,8 +3,8 @@ import random
 
 @tool
 def check_igot_account_status(email: str):
-    """Checks the link between iGOT ID and Parichay/SPV."""
-    if "ramesh" in email.lower():
+    """Checks the iGOT mail ID."""
+    if "name" in email.lower():
         return "RESULT: ID NOT LINKED. User must complete onboarding at janparichay.nic.in."
     return "RESULT: Account is active and synced."
 

@@ -19,7 +19,7 @@ from src.tools import (
 # Load env
 load_dotenv()
 if not os.getenv("GROQ_API_KEY"):
-    load_dotenv("src/.env")
+    load_dotenv(".env")
 
 # ---- State ----
 class State(TypedDict):
@@ -53,6 +53,25 @@ def route(state: State):
     last_msg = state["messages"][-1]
     if getattr(last_msg, "tool_calls", None):
         return "tools"
+    return END
+
+def route_next_step(state: State):
+    last_message = state["messages"][-1]
+
+    # If the assistant wants to call a tool
+    if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+        tool_call = last_message.tool_calls[0]
+
+        # Guard: prevent ticket creation without required details
+        if tool_call["name"] == "create_igot_ticket":
+            args = tool_call.get("args", {})
+            required = ["email", "phone", "issue_description"]
+
+            if not all(args.get(k) for k in required):
+                return END  # Force assistant to ask for missing info
+
+        return "tools"
+
     return END
 
 # ---- Graph ----
