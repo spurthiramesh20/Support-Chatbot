@@ -1,31 +1,59 @@
+from typing import List, Optional
+from typing_extensions import TypedDict
+from langchain_core.messages import BaseMessage
 from langchain_core.tools import tool
-import random
 
-@tool
-def check_igot_account_status(email: str):
-    """Checks the iGOT mail ID."""
-    if "name" in email.lower():
-        return "RESULT: ID NOT LINKED. User must complete onboarding at janparichay.nic.in."
-    return "RESULT: Account is active and synced."
+MAX_RETRIES = 2
 
 
-@tool
-def verify_certificate_eligibility(email: str, course_name: str):
-    """Checks assessment scores for a course."""
-    score = random.randint(50, 95)
-    if score < 70:
-        return f"RESULT: Assessment score for {course_name} is {score}%. 70% required."
-    return f"RESULT: Eligibility met (Score: {score}%)."
+class SupportState(TypedDict, total=False):
+    messages: List[BaseMessage]
+    email: Optional[str]
+    password_tried: Optional[bool]
+    otp_received: Optional[bool]
+    last_action: Optional[str]
+    retry_count: Optional[int]
 
 
-@tool
-def create_igot_ticket(email: str, phone: str, issue_description: str):
-    """Creates a formal support ticket after all checks."""
-    ticket_id = f"IGOT-{random.randint(10000, 99999)}"
+def _loop_guard(state: SupportState, action: str) -> bool:
     return (
-        f"SUCCESS: Ticket prepared.\n"
-        f"Ticket ID: {ticket_id}\n"
-        f"Email: {email}\n"
-        f"Phone: {phone}\n"
-        f"Issue: {issue_description}"
+        state.get("last_action") == action
+        and state.get("retry_count", 0) >= MAX_RETRIES
     )
+
+
+@tool
+def handle_login_issue(state: SupportState) -> str:
+    """Guide the user through the login troubleshooting flow based on state."""
+    # ASK EMAIL
+    if state.get("email") is None:
+        if _loop_guard(state, "ASK_EMAIL"):
+            return "I’ll pause here \nShare your registered email when ready."
+
+        state["last_action"] = "ASK_EMAIL"
+        state["retry_count"] = state.get("retry_count", 0) + 1
+        return "Please confirm your registered email ID."
+
+    # PASSWORD RESET
+    if state.get("password_tried") is None:
+        if _loop_guard(state, "ASK_PASSWORD"):
+            return "Let me know once you’ve tried resetting your password."
+
+        state["last_action"] = "ASK_PASSWORD"
+        state["retry_count"] = state.get("retry_count", 0) + 1
+        return "Have you tried resetting your password using *Forgot Password*?"
+
+    # OTP CHECK
+    if state["password_tried"] and state.get("otp_received") is None:
+        if _loop_guard(state, "ASK_OTP"):
+            return "Please wait a few minutes — OTPs can take time "
+
+        state["last_action"] = "ASK_OTP"
+        state["retry_count"] = state.get("retry_count", 0) + 1
+        return "Did you receive an OTP?"
+
+    # OTP NOT RECEIVED
+    if state.get("otp_received") is False:
+        return "OTPs can take up to 10 minutes. Please retry."
+
+    return " I can escalate this to support if needed."

@@ -2,10 +2,16 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
-from src.graph import app as graph_app
+
+# Load .env from repo root before importing modules that need env vars
+_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(dotenv_path=_ROOT / ".env")
+
+from src.graph import app as graph_app  # noqa: E402
 
 logging.getLogger("httpx").setLevel(logging.WARNING) # Silences the HTTP logs
 
@@ -15,6 +21,9 @@ api = FastAPI(title="Support Chatbot")
 class ChatRequest(BaseModel):
     message: str
     thread_id: Optional[str] = "local_test"
+    ticket_email: Optional[str] = None
+    ticket_phone: Optional[str] = None
+    ticket_issue: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
@@ -33,6 +42,17 @@ def index() -> str:
 
 @api.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
+    # If ticket data is provided, handle ticket creation here
+    if req.ticket_email and req.ticket_phone and req.ticket_issue:
+        return ChatResponse(
+            reply=(
+                "Thanks! Your support ticket has been created.\n"
+                f"Email: {req.ticket_email}\n"
+                f"Phone: {req.ticket_phone}\n"
+                "Our team will contact you soon."
+            )
+        )
+
     config = {"configurable": {"thread_id": req.thread_id}}
     result = graph_app.invoke({"messages": [("user", req.message)]}, config)
 

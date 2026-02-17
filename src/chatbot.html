@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Support Chatbot</title>
+    <title>iGOT Support Chatbot</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -35,6 +35,11 @@
         font-weight: 700;
         margin: 0 0 8px;
       }
+      .subtitle {
+        color: var(--muted);
+        margin: 0 0 24px;
+        font-size: 14px;
+      }
       .card {
         background: var(--card);
         border-radius: 12px;
@@ -48,47 +53,131 @@
         height: 520px;
       }
       .messages {
-        overflow: auto;
-        padding: 6px;
+        overflow-y: auto;
+        padding: 12px 6px;
         display: flex;
         flex-direction: column;
         gap: 12px;
       }
+      
+      /* Message bubble styling */
+      .message-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
       .bubble {
         max-width: 80%;
         padding: 12px 14px;
         border-radius: 14px;
         font-size: 14px;
-        line-height: 1.4;
+        line-height: 1.5;
         position: relative;
         animation: floatIn 360ms ease;
-        white-space: pre-line;
+        white-space: pre-wrap;
+        word-wrap: break-word;
       }
+
       .bubble.user {
         align-self: flex-end;
         background: var(--accent);
         color: white;
         border-top-right-radius: 6px;
       }
+
       .bubble.bot {
         align-self: flex-start;
         background: #f1f5f9;
         border: 1px solid var(--border);
         border-top-left-radius: 6px;
       }
+
+      /* Options container */
+      .options-container {
+        align-self: flex-start;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+        max-width: 500px;
+        margin-top: 4px;
+      }
+
+      .option-btn {
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        padding: 10px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: "Plus Jakarta Sans", inherit;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink);
+        text-align: left;
+        transition: all 200ms ease;
+        box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
+      }
+
+      .option-btn:hover {
+        border-color: var(--accent);
+        background: #eff6ff;
+        transform: translateX(2px);
+      }
+
+      .option-btn:active {
+        transform: translateX(2px) scale(0.98);
+      }
+
+      .option-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Loading indicator */
+      .loading-indicator {
+        display: flex;
+        gap: 4px;
+        padding: 12px 14px;
+        align-self: flex-start;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--muted);
+        animation: bounce 1.4s infinite;
+      }
+
+      .dot:nth-child(2) { animation-delay: 0.2s; }
+      .dot:nth-child(3) { animation-delay: 0.4s; }
+
+      /* Composer (input area) */
       .composer {
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 12px;
         margin-top: 12px;
       }
+
       .input {
         padding: 12px 14px;
         border-radius: 10px;
         border: 1px solid var(--border);
         font-size: 14px;
-        font-family: inherit;
+        font-family: "Plus Jakarta Sans", inherit;
+        transition: border-color 200ms ease;
+        resize: none;
+        min-height: 40px;
       }
+
+      .input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
       .btn {
         border: none;
         background: var(--accent);
@@ -100,34 +189,118 @@
         letter-spacing: 0.2px;
         transition: transform 120ms ease, box-shadow 120ms ease;
         box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+        font-family: "Plus Jakarta Sans", inherit;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      .btn:active { transform: translateY(1px); }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn:active { 
+        transform: translateY(1px);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
       @keyframes floatIn {
         from { transform: translateY(6px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
       }
+
+      @keyframes bounce {
+        0%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-8px); }
+      }
+
       @media (max-width: 640px) {
         .chat { height: 520px; }
+        .bubble { max-width: 90%; }
+        .options-container { max-width: 100%; }
       }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <h1 class="title">Support Chatbot</h1>
+      <h1 class="title">iGOT Support</h1>
+      <p class="subtitle">Get instant help with your queries</p>
       <div class="card chat">
         <div id="messages" class="messages"></div>
         <div class="composer">
-          <input id="input" class="input" placeholder="Type your message..." />
+          <textarea id="input" class="input" placeholder="Type your message or select an option..." rows="1"></textarea>
           <button id="send" class="btn">Send</button>
         </div>
       </div>
     </div>
+
     <script>
       const messages = document.getElementById("messages");
       const input = document.getElementById("input");
       const send = document.getElementById("send");
+      const THREAD_ID = "igot_user_" + Date.now();
 
-      function addBubble(text, who) {
+      // Define quick options for different scenarios
+      const QUICK_OPTIONS = {
+        initial: [
+          { label: "🔐 Login Issue", value: "login_issue" },
+          { label: "📚 Course Issue", value: "course_issue" },
+          { label: "📜 Certificate Issue", value: "certificate_issue" },
+          { label: "⏳ Course Won't Load", value: "course_load_issue" },
+          { label: "❓ Something Else", value: "other_issue" }
+        ],
+        login_followup: [
+          { label: "Can't see login page", value: "page_not_loading" },
+          { label: "Error message appears", value: "error_message" },
+          { label: "Login works but no access", value: "login_no_access" },
+          { label: "Forgot password", value: "forgot_password" }
+        ],
+        password_options: [
+          { label: "Yes, tried resetting password", value: "password_reset_yes" },
+          { label: "No, I'm stuck", value: "password_reset_no" }
+        ],
+        otp_options: [
+          { label: "Yes, received OTP", value: "otp_yes" },
+          { label: "No, didn't receive OTP", value: "otp_no" }
+        ],
+        course_followup: [
+          { label: "Course not visible in dashboard", value: "course_not_visible" },
+          { label: "Can't enroll in course", value: "cant_enroll" },
+          { label: "Course content not loading", value: "content_not_loading" }
+        ],
+        certificate_followup: [
+          { label: "Can't see my certificate", value: "cert_not_visible" },
+          { label: "Completed but no certificate", value: "cert_not_generated" },
+          { label: "Can't download certificate", value: "cant_download_cert" }
+        ],
+        escalate_options: [
+          { label: "Create Support Ticket", value: "escalate_to_support" },
+          { label: "Try Again", value: "restart_conversation" }
+        ]
+      };
+
+      // Track conversation state
+      let conversationState = {
+        currentContext: "initial",
+        lastUserSelection: null,
+        isWaitingForResponse: false,
+        ticketFlow: {
+          active: false,
+          stage: null, // "email" | "phone" | "issue"
+          data: {
+            email: "",
+            phone: "",
+            issue: ""
+          }
+        }
+      };
+
+      function addBubble(text, who = "bot") {
         const div = document.createElement("div");
         div.className = `bubble ${who}`;
         div.textContent = text;
@@ -135,27 +308,277 @@
         messages.scrollTop = messages.scrollHeight;
       }
 
-      async function sendMessage() {
-        const text = input.value.trim();
-        if (!text) return;
-        addBubble(text, "user");
-        input.value = "";
-
-        const res = await fetch("/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, thread_id: "ui_demo" })
-        });
-        const data = await res.json();
-        addBubble(data.reply || "No response.", "bot");
+      function showLoading() {
+        const group = document.createElement("div");
+        group.className = "loading-indicator";
+        group.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+        messages.appendChild(group);
+        messages.scrollTop = messages.scrollHeight;
+        return group;
       }
 
-      send.addEventListener("click", sendMessage);
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") sendMessage();
+      function addOptions(optionsKey) {
+        const optionsList = QUICK_OPTIONS[optionsKey] || [];
+        
+        const container = document.createElement("div");
+        container.className = "options-container";
+
+        optionsList.forEach(option => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.textContent = option.label;
+          btn.onclick = () => handleOptionClick(option.value, option.label);
+          container.appendChild(btn);
+        });
+
+        messages.appendChild(container);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function handleOptionClick(value, label) {
+        // Show user's selection as message
+        addBubble(label, "user");
+        
+        // Start ticket flow without calling backend
+        if (value === "escalate_to_support") {
+          const existingOptions = document.querySelector(".options-container");
+          if (existingOptions) {
+            existingOptions.remove();
+          }
+
+          conversationState.ticketFlow.active = true;
+          conversationState.ticketFlow.stage = "email";
+          conversationState.ticketFlow.data = { email: "", phone: "", issue: "" };
+
+          addBubble("To create a support ticket, please share your email address.");
+          return;
+        }
+
+        // Disable input temporarily
+        input.disabled = true;
+        send.disabled = true;
+        conversationState.isWaitingForResponse = true;
+
+        // Store selection and send to backend
+        conversationState.lastUserSelection = value;
+
+        // Send to backend for processing
+        sendToBackend(label, value);
+      }
+
+      function sendToBackend(userMessage, optionValue = null, extraPayload = null) {
+        const loadingGroup = showLoading();
+
+        const payload = {
+          message: userMessage,
+          thread_id: THREAD_ID,
+          context: conversationState.currentContext,
+          option_value: optionValue
+        };
+
+        if (extraPayload) {
+          Object.assign(payload, extraPayload);
+        }
+
+        fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+          // Remove loading indicator
+          loadingGroup.remove();
+
+          // Show bot response
+          if (data.reply) {
+            addBubble(data.reply);
+          }
+
+          // Update context based on response or option
+          updateContext(optionValue || userMessage);
+
+          // Show appropriate follow-up options based on context
+          showContextualOptions(conversationState.currentContext);
+
+          // Re-enable input
+          input.disabled = false;
+          send.disabled = false;
+          input.focus();
+          conversationState.isWaitingForResponse = false;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          loadingGroup.remove();
+          addBubble("Sorry, there was an error. Please try again.");
+          
+          input.disabled = false;
+          send.disabled = false;
+          input.focus();
+          conversationState.isWaitingForResponse = false;
+        });
+      }
+
+      function updateContext(selection) {
+        // Map selections to context updates
+        const contextMap = {
+          "login_issue": "login",
+          "course_issue": "course",
+          "certificate_issue": "certificate",
+          "course_load_issue": "course_load",
+          "other_issue": "other",
+          "page_not_loading": "login_cache",
+          "error_message": "login_error",
+          "login_no_access": "login_access",
+          "forgot_password": "password_reset",
+          "password_reset_yes": "password_done",
+          "password_reset_no": "password_help",
+          "otp_yes": "otp_done",
+          "otp_no": "otp_missing",
+          "course_not_visible": "course_enroll",
+          "cant_enroll": "enroll_error",
+          "content_not_loading": "content_load",
+          "cert_not_visible": "cert_check",
+          "cert_not_generated": "cert_processing",
+          "cant_download_cert": "cert_download",
+          "escalate_to_support": "escalated",
+          "restart_conversation": "initial",
+          "escalate_submit": "escalated"
+        };
+
+        if (contextMap[selection]) {
+          conversationState.currentContext = contextMap[selection];
+        }
+      }
+
+      function showContextualOptions(context) {
+        // Show different options based on current context
+        const optionsMap = {
+          "initial": "initial",
+          "login": "login_followup",
+          "course": "course_followup",
+          "certificate": "certificate_followup",
+          "login_cache": "password_options",
+          "login_error": "password_options",
+          "login_access": "password_options",
+          "password_reset": "password_options",
+          "password_done": "otp_options",
+          "password_help": "password_options",
+          "otp_done": "escalate_options",
+          "otp_missing": "escalate_options",
+          "course_enroll": "escalate_options",
+          "enroll_error": null,  // No buttons for this
+          "content_load": "escalate_options",
+          "cert_check": "password_options",
+          "cert_processing": null,  // No buttons
+          "cert_download": "escalate_options",
+          "escalated": null,  // No buttons after escalation
+          "other": null  // No buttons for other
+        };
+
+        if (conversationState.ticketFlow.active) {
+          return;
+        }
+
+        const optionsKey = optionsMap[context];
+        if (optionsKey) {
+          setTimeout(() => {
+            addOptions(optionsKey);
+          }, 500);
+        }
+      }
+
+      function handleTicketInput(text) {
+        const flow = conversationState.ticketFlow;
+
+        if (flow.stage === "email") {
+          flow.data.email = text;
+          flow.stage = "phone";
+          addBubble("Thanks! Please share your phone number.");
+          return;
+        }
+
+        if (flow.stage === "phone") {
+          flow.data.phone = text;
+          flow.stage = "issue";
+          addBubble("Got it. Please describe your issue in detail.");
+          return;
+        }
+
+        if (flow.stage === "issue") {
+          flow.data.issue = text;
+          flow.active = false;
+          flow.stage = null;
+
+          // Send ticket details to backend
+          input.disabled = true;
+          send.disabled = true;
+          conversationState.isWaitingForResponse = true;
+
+          sendToBackend(
+            "CREATE_TICKET",
+            "escalate_submit",
+            {
+              ticket_email: flow.data.email,
+              ticket_phone: flow.data.phone,
+              ticket_issue: flow.data.issue
+            }
+          );
+        }
+      }
+
+      async function sendMessage() {
+        const text = input.value.trim();
+        if (!text || conversationState.isWaitingForResponse) return;
+
+        // Show user message
+        addBubble(text, "user");
+        input.value = "";
+        
+        // Auto-resize textarea
+        input.style.height = "auto";
+
+        // Clear any existing options
+        const existingOptions = document.querySelector(".options-container");
+        if (existingOptions) {
+          existingOptions.remove();
+        }
+
+        // Ticket flow handling
+        if (conversationState.ticketFlow.active) {
+          handleTicketInput(text);
+          return;
+        }
+
+        // Disable input while processing
+        input.disabled = true;
+        send.disabled = true;
+        conversationState.isWaitingForResponse = true;
+
+        // Send free-text message to backend
+        sendToBackend(text);
+      }
+
+      // Auto-resize textarea
+      input.addEventListener("input", function() {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 120) + "px";
       });
 
-      addBubble("Hi! How can I help you today?", "bot");
+      // Event listeners
+      send.addEventListener("click", sendMessage);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey && !input.disabled) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      // Initialize
+      window.addEventListener("load", () => {
+        addBubble("Hi! 👋 How can I help you today?");
+        addOptions("initial");
+      });
     </script>
   </body>
 </html>
