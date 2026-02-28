@@ -1,0 +1,104 @@
+[
+  {
+    "id": "login_otp_missing",
+    "input": "I am not receiving OTP on my email",
+    "expected_intent": "OTP_NOT_RECEIVED",
+    "expected_action": "ASK_OTP"
+  },
+  {
+    "id": "invalid_user",
+    "input": "It says invalid user details",
+    "expected_intent": "INVALID_USER",
+    "expected_action": "VERIFY_ACCOUNT"
+  },
+  {
+    "id": "login_password_issue",
+    "input": "I forgot my password and can't login",
+    "expected_intent": "LOGIN_ISSUE",
+    "expected_action": "RESET_PASSWORD"
+  },
+  {
+    "id": "registration_error",
+    "input": "I am unable to register on the platform",
+    "expected_intent": "REGISTRATION_ISSUE",
+    "expected_action": "GUIDE_REGISTRATION"
+  },
+  {
+    "id": "course_access",
+    "input": "I can't access my course",
+    "expected_intent": "COURSE_ISSUE",
+    "expected_action": "CHECK_COURSE_ENROLLMENT"
+  },
+  {
+    "id": "profile_update_issue",
+    "input": "I want to update my profile but it’s not saving",
+    "expected_intent": "PROFILE_UPDATE",
+    "expected_action": "GUIDE_PROFILE_UPDATE"
+  },
+  {
+    "id": "profile_verification",
+    "input": "How do I verify my profile?",
+    "expected_intent": "PROFILE_VERIFICATION",
+    "expected_action": "EXPLAIN_VERIFICATION_STEPS"
+  },
+  {
+    "id": "certificate_issue",
+    "input": "My certificate is not downloading",
+    "expected_intent": "CERTIFICATE_ISSUE",
+    "expected_action": "TROUBLESHOOT_CERTIFICATE_DOWNLOAD"
+  },
+  {
+    "id": "karma_points_issue",
+    "input": "My karma points are not updating",
+    "expected_intent": "KARMA_POINTS",
+    "expected_action": "CHECK_KARMA_POINTS_STATUS"
+  },
+  {
+    "id": "weekly_clap_issue",
+    "input": "I didn’t receive my weekly clap",
+    "expected_intent": "WEEKLY_CLAP",
+    "expected_action": "EXPLAIN_WEEKLY_CLAP_PROCESS"
+  },
+  {
+    "id": "bulk_upload_error",
+    "input": "Bulk upload of data is failing",
+    "expected_intent": "BULK_UPLOAD",
+    "expected_action": "TROUBLESHOOT_BULK_UPLOAD"
+  },
+  {
+    "id": "report_issue",
+    "input": "I can’t generate a report",
+    "expected_intent": "REPORT_ISSUE",
+    "expected_action": "GUIDE_REPORT_GENERATION"
+  },
+  {
+    "id": "dashboard_issue",
+    "input": "My dashboard is not showing updated data",
+    "expected_intent": "DASHBOARD_ISSUE",
+    "expected_action": "CHECK_DASHBOARD_DATA_VISIBILITY"
+  },
+  {
+    "id": "data_visibility_issue",
+    "input": "I cannot see some data in the portal",
+    "expected_intent": "DATA_VISIBILITY",
+    "expected_action": "CHECK_ACCESS_RIGHTS"
+  },
+  {
+    "id": "multiple_account_issue",
+    "input": "I think I have multiple accounts",
+    "expected_intent": "MULTIPLE_ACCOUNT",
+    "expected_action": "VERIFY_ACCOUNT_DUPLICATES"
+  },
+  {
+    "id": "bulk_profile_upload_issue",
+    "input": "Bulk profile upload is not working",
+    "expected_intent": "BULK_PROFILE_UPLOAD",
+    "expected_action": "TROUBLESHOOT_BULK_PROFILE_UPLOAD"
+  },
+  {
+    "id": "competency_issue",
+    "input": "My competency score is not updating",
+    "expected_intent": "COMPETENCY_ISSUE",
+    "expected_action": "CHECK_COMPETENCY_STATUS"
+  }
+]

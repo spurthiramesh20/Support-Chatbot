@@ -11,6 +11,14 @@
 
 # env files
 /.env
+/.env.*
+*.env
+*.log
+*.sqlite3
+*.key
+*.pem
+*.p12
+*.pfx
 
 # editor settings
 /.vscode/

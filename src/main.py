@@ -6,29 +6,24 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+from langchain_core.messages import HumanMessage
 
-# Load .env from repo root before importing modules that need env vars
+# Load .env
 _ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(dotenv_path=_ROOT / ".env")
 
-from src.graph import app as graph_app  # noqa: E402
+from src.agent import app as graph_app  # noqa: E402
 
-logging.getLogger("httpx").setLevel(logging.WARNING) # Silences the HTTP logs
+logging.getLogger("httpx").setLevel(logging.WARNING) 
 
-api = FastAPI(title="Support Chatbot")
-
+api = FastAPI(title="Support Chatbot- LangGraph")
 
 class ChatRequest(BaseModel):
     message: str
-    thread_id: Optional[str] = "local_test"
-    ticket_email: Optional[str] = None
-    ticket_phone: Optional[str] = None
-    ticket_issue: Optional[str] = None
-
+    thread_id: Optional[str] = "local_test" # Now matches your frontend localStorage ID
 
 class ChatResponse(BaseModel):
     reply: str
-
 
 @api.get("/health")
 def health() -> dict:
@@ -39,25 +34,22 @@ def index() -> str:
     html_path = Path(__file__).parent / "chatbot.html"
     return html_path.read_text(encoding="utf-8")
 
-
 @api.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest) -> ChatResponse:
-    # If ticket data is provided, handle ticket creation here
-    if req.ticket_email and req.ticket_phone and req.ticket_issue:
-        return ChatResponse(
-            reply=(
-                "Thanks! Your support ticket has been created.\n"
-                f"Email: {req.ticket_email}\n"
-                f"Phone: {req.ticket_phone}\n"
-                "Our team will contact you soon."
-            )
-        )
-
+async def chat(req: ChatRequest) -> ChatResponse:
+    # 1. Prepare the thread configuration for MemorySaver
     config = {"configurable": {"thread_id": req.thread_id}}
-    result = graph_app.invoke({"messages": [("user", req.message)]}, config)
+    
+    # 2. Use ainvoke (async) for smoother UI performance
+    # This ensures history is preserved for this specific thread_id
+    result = await graph_app.ainvoke(
+        {"messages": [HumanMessage(content=req.message)]}, 
+        config=config
+    )
 
+    # 3. Extract the last AI response
     messages = result.get("messages", [])
-    reply = ""
+    reply = "I'm sorry, I couldn't process that. Please try again."
+    
     if messages:
         last_msg = messages[-1]
         if hasattr(last_msg, "content") and last_msg.content:
@@ -65,20 +57,26 @@ def chat(req: ChatRequest) -> ChatResponse:
 
     return ChatResponse(reply=reply)
 
+# CLI mode for testing
 def run_bot():
-    config = {"configurable": {"thread_id": "igot_user_1"}}
-    print("iGOT Support Bot is Online. Type 'exit' to quit.")
+    import asyncio
+    config = {"configurable": {"thread_id": "cli_test_user"}}
+    print("iGOT Support Bot (CLI) Online. Type 'exit' to quit.")
     
-    while True:
-        user_input = input("User: ")
-        if user_input.lower() in ["exit", "quit"]: break
-        
-        for event in graph_app.stream({"messages": [("user", user_input)]}, config):
-            for value in event.values():
-                if "messages" in value:
-                    msg = value["messages"][-1]
-                    if hasattr(msg, "content") and msg.content:
-                        print(f"\nBot: {msg.content}")
+    async def main_loop():
+        while True:
+            user_input = input("User: ")
+            if user_input.lower() in ["exit", "quit"]: break
+            
+            # Using stream for CLI feedback
+            async for event in graph_app.astream({"messages": [HumanMessage(content=user_input)]}, config):
+                for value in event.values():
+                    if "messages" in value:
+                        msg = value["messages"][-1]
+                        if msg.type == "ai" and msg.content:
+                            print(f"Bot: {msg.content}")
+
+    asyncio.run(main_loop())
 
 if __name__ == "__main__":
     run_bot()

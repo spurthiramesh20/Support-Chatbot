@@ -1,0 +1,308 @@
+[
+  {
+    "input": "I am not receiving OTP on my email",
+    "response": "Please provide your registered email ID so I can assist you further.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 4,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 2,
+      "autonomy_support": 1
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "It says invalid user details",
+    "response": "Invalid credentials.\nPlease use *Forgot Password* to reset your password.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I forgot my password and can't login",
+    "response": " Login failed.\nPlease verify your credentials and try again.\nIf the issue persists, reset your password.",
+    "scores": {
+      "understanding": 2,
+      "relevance": 2,
+      "clarity": 4,
+      "overall": 2,
+      "actionability": 3,
+      "conciseness": 4,
+      "tone": 5,
+      "error_guidance": 3,
+      "autonomy_support": 2
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I am unable to register on the platform",
+    "response": " Registration Issue: Unable to register.\nPlease ensure:\n• You are using a valid government email\n• Parichay authentication is successful\n• Try again after clearing browser cache",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I can't access my course",
+    "response": " Course **** is not visible.\nPlease log out and log in again.\nIf still not visible, syncing may be pending.",
+    "scores": {
+      "understanding": 4,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 4,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 4,
+      "autonomy_support": 4
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I want to update my profile but itâ€™s not saving",
+    "response": "If profile update is failing:\n1. Ensure all mandatory fields are filled.\n2. Avoid special characters in name or designation.\n3. Try updating from a different browser.\n\nIf the issue still persists, you can create a support ticket.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "How do I verify my profile?",
+    "response": "Profile verification can take some time.\nPlease wait for verification to complete.\nIf it remains pending for a long time, you may create a support ticket.",
+    "scores": {
+      "understanding": 0,
+      "relevance": 1,
+      "clarity": 3,
+      "overall": 0,
+      "actionability": 1,
+      "conciseness": 3,
+      "tone": 4,
+      "error_guidance": 3,
+      "autonomy_support": 1
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "My certificate is not downloading",
+    "response": "Certificate download failed.\nPlease try using a different browser or device.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 4,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 4,
+      "autonomy_support": 4
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "My karma points are not updating",
+    "response": "Your Karma points are not updating correctly.\n\nSteps to resolve:\n1. Esure course activities are fully completed.\n2. Log out and log back in after a few hours.\n\nIf the issue remains unresolved, you may proceed to create a support ticket.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I didnâ€™t receive my weekly clap",
+    "response": "{\"reply\": \"Your weekly clap is missing from the dashboard.\\n\\nSteps to resolve:\\n1. Weekly claps are updated once per week.\\n2. Please wait for the next update cycle.\\n\\nIf the issue still persists after the update, you may proceed to create a support ticket.\"}",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "Bulk upload of data is failing",
+    "response": "I understand that the bulk upload of data is failing. Please try clearing your browser cache/cookies or try accessing the portal via an Incognito window.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 4,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 4,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I canâ€™t generate a report",
+    "response": "Could you please provide more details about what kind of report you are trying to generate?",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 4,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 4,
+      "autonomy_support": 2
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "My dashboard is not showing updated data",
+    "response": "Only partial data is visible on your dashboard.\n\nSteps to resolve:\n1. Clear browser cache and cookies.\n2. Try accessing the dashboard using a different browser.\n\nIf the issue continues, you may proceed to create a support ticket.",
+    "scores": {
+      "understanding": 4,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I cannot see some data in the portal",
+    "response": "Only partial data is visible on your dashboard.\n\nSteps to resolve:\n1. Clear browser cache and cookies.\n2. Try accessing the dashboard using a different browser.\n\nIf the issue continues, you may proceed to create a support ticket.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "I think I have multiple accounts",
+    "response": "Multiple accounts detected.\nPlease use the primary registered email ID.\nAvoid creating duplicate accounts.\n\nIf access is blocked, you may create a support ticket.",
+    "scores": {
+      "understanding": 2,
+      "relevance": 4,
+      "clarity": 5,
+      "overall": 2,
+      "actionability": 4,
+      "conciseness": 5,
+      "tone": 4,
+      "error_guidance": 4,
+      "autonomy_support": 2
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "Bulk profile upload is not working",
+    "response": "If profile update is failing:\n1. Ensure all mandatory fields are filled.\n2. Avoid special characters in name or designation.\n3. Try updating from a different browser.\n\nIf the issue still persists, you can create a support ticket.",
+    "scores": {
+      "understanding": 5,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  },
+  {
+    "input": "My competency score is not updating",
+    "response": "{\"reply\": \"Your course progress is not updated on the dashboard.\\n\\nSteps to resolve:\\n1. Ensure all videos are watched till the end.\\n2. Complete all required assessments.\\n3. Refresh the dashboard page.\\n\\nIf the issue continues, you may proceed to create a support ticket.\"}",
+    "scores": {
+      "understanding": 4,
+      "relevance": 5,
+      "clarity": 5,
+      "overall": 5,
+      "actionability": 5,
+      "conciseness": 5,
+      "tone": 5,
+      "error_guidance": 5,
+      "autonomy_support": 5
+    },
+    "meta": {
+      "framework": "langgraph"
+    }
+  }
+]
